@@ -4,8 +4,14 @@
     {
       "name": "presentation",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "presentation"],
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "presentation/v2"],
       "port": 8080
+    },
+    {
+      "name": "presentation-v1",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8081", "--directory", "presentation"],
+      "port": 8081
     }
   ]
 }

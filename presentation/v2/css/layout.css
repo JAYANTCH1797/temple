@@ -1,0 +1,193 @@
+/* ============================================
+   LAYOUT — Scroll-snap, sections, responsive
+   ============================================ */
+
+/* ---- Scroll Container ---- */
+.scroll-container {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+/* ---- Sections ---- */
+.section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Interstitial quote sections */
+.section--interstitial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--section-pad-x);
+  min-height: 60vh;
+}
+
+/* ---- Fixed UI: Progress Bar ---- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 1000;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ---- Fixed UI: Section Counter ---- */
+.section-counter {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.section-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.section-dot.active {
+  background: var(--accent);
+  width: 6px;
+  height: 20px;
+  border-radius: 3px;
+}
+
+.section-dot:hover {
+  background: var(--muted);
+}
+
+/* ---- Fixed UI: Topbar ---- */
+.topbar {
+  position: fixed;
+  top: 2px; /* below progress bar */
+  left: 0;
+  right: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 200;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-brand {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.topbar-brand span { color: var(--accent); }
+
+.topbar-title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--cream);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.topbar-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* ---- Grid Helpers ---- */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  :root {
+    --section-pad-x: 24px;
+  }
+
+  .scroll-container {
+    scroll-snap-type: none;
+  }
+
+  .section {
+    min-height: auto;
+    scroll-snap-align: none;
+  }
+
+  .section--interstitial {
+    min-height: 50vh;
+    padding: 48px var(--section-pad-x);
+  }
+
+  .section-counter {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 20px;
+    justify-content: center;
+  }
+
+  .topbar-brand,
+  .topbar-meta {
+    display: none;
+  }
+
+  .topbar-title {
+    position: static;
+    transform: none;
+  }
+
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .grid-5 { grid-template-columns: 1fr 1fr; }
+}
