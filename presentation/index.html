@@ -1,0 +1,2579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jayant Chauhan — Temple</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --surface-2: #181818;
+      --surface-3: #1E1E1E;
+      --orange: #4D7CFF;
+      --orange-dim: #3D63CC;
+      --orange-glow: rgba(77, 124, 255, 0.08);
+      --cream: #F2EDE6;
+      --muted: #7A756E;
+      --muted-2: #555049;
+      --border: #252525;
+      --border-light: #333;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== ATMOSPHERE ===== */
+    .bg-grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 128px;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77, 124, 255, 0.05) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+      top: -300px;
+      right: -200px;
+      transition: opacity 0.8s;
+    }
+
+    .bg-glow-2 {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77, 124, 255, 0.03) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+      bottom: -200px;
+      left: -100px;
+    }
+
+    /* ===== FIXED UI ===== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      justify-content: space-between;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 200;
+    }
+
+    .topbar-left {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .topbar-left span {
+      color: var(--orange);
+    }
+
+    .topbar-center {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--cream);
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .topbar-right {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--orange);
+      letter-spacing: 1px;
+    }
+
+    .bottombar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      justify-content: space-between;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 200;
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 1px;
+    }
+
+    .nav-btn {
+      width: 36px;
+      height: 28px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .nav-btn:hover {
+      background: var(--orange);
+      color: var(--bg);
+      border-color: var(--orange);
+    }
+
+    .progress-track {
+      flex: 1;
+      max-width: 200px;
+      height: 2px;
+      background: var(--border);
+      position: relative;
+      margin: 0 24px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--orange);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide-indicators {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .ind {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .ind.active {
+      background: var(--orange);
+      width: 20px;
+      border-radius: 3px;
+    }
+
+    .ind:hover {
+      background: var(--muted);
+    }
+
+    .key-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted-2);
+      letter-spacing: 1px;
+    }
+
+    /* ===== SLIDE ENGINE ===== */
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      transform: translateY(16px);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .slide>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== COMMON ===== */
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-tag::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--orange);
+      opacity: 0.4;
+    }
+
+    .display {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(60px, 8.5vw, 110px);
+      line-height: 0.92;
+      letter-spacing: 1px;
+      color: var(--cream);
+    }
+
+    .display em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--orange);
+    }
+
+    .body-text {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 480px;
+    }
+
+    .body-text strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .orange-line {
+      width: 48px;
+      height: 2px;
+      background: var(--orange);
+    }
+
+    /* ===== SLIDE 1: HERO ===== */
+    #s1 {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 44px 0 44px;
+      /* topbar + bottombar */
+    }
+
+    .hero-top {
+      padding: 0 48px;
+      flex-shrink: 0;
+    }
+
+    .hero-headline {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: clamp(22px, 2.4vw, 32px);
+      line-height: 1.4;
+      color: var(--cream);
+      max-width: 680px;
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    .hero-subline {
+      margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-subline::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--orange);
+    }
+
+    .hero-pillars {
+      display: flex;
+      gap: 16px;
+      padding: 0 48px;
+      margin-top: auto;
+      margin-bottom: 24px;
+      flex: 0 1 auto;
+      align-items: stretch;
+    }
+
+    .hero-pillar {
+      flex: 1;
+      padding: 20px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s;
+    }
+
+    .hero-pillar:hover {
+      background: var(--surface-2);
+      border-color: var(--border-light);
+    }
+
+    .hero-pillar-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--orange);
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .hero-pillar-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hero-pillar-body {
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-weight: 300;
+      flex: 1;
+    }
+
+    .hero-pillar-body strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .hero-pillar-arrow {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--orange);
+      letter-spacing: 0.5px;
+    }
+
+    .hero-bottom {
+      padding: 16px 48px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    .hero-bottom-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 640px;
+    }
+
+    .hero-contact {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: var(--muted-2);
+      line-height: 2;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .hero-contact a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    .hero-contact a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== SLIDE 2: FITNESS ===== */
+    #s2 {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      padding: 44px 0 44px;
+    }
+
+    .fitness-left {
+      padding: 40px 44px 36px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fitness-right {
+      padding: 40px 32px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.2;
+      color: var(--cream);
+      margin-bottom: 28px;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .tl-row {
+      display: grid;
+      grid-template-columns: 72px 1px 1fr;
+      gap: 0 16px;
+    }
+
+    .tl-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      padding-top: 14px;
+    }
+
+    .tl-line-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tl-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      margin-top: 16px;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .tl-row.hot .tl-dot {
+      border-color: var(--orange);
+      background: var(--orange);
+      box-shadow: 0 0 10px rgba(255, 77, 0, 0.35);
+    }
+
+    .tl-connector {
+      width: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .tl-row:last-child .tl-connector {
+      display: none;
+    }
+
+    .tl-body {
+      padding: 12px 0 20px;
+    }
+
+    .tl-event {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 3px;
+    }
+
+    .tl-row.hot .tl-event {
+      color: var(--orange);
+    }
+
+    .tl-detail {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* Stat cards */
+    .fit-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      position: relative;
+      transition: all 0.25s;
+    }
+
+    .fit-stat:hover {
+      border-color: var(--border-light);
+    }
+
+    .fit-stat.hot {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .fit-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      line-height: 1;
+      color: var(--cream);
+    }
+
+    .fit-stat.hot .fit-stat-num {
+      color: #fff;
+    }
+
+    .fit-stat-num span {
+      font-size: 22px;
+      color: var(--muted);
+    }
+
+    .fit-stat.hot .fit-stat-num span {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .fit-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .fit-stat.hot .fit-stat-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .commitment-box {
+      margin-top: auto;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-left: 2px solid var(--orange);
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .commitment-box strong {
+      color: var(--cream);
+    }
+
+    /* ===== SLIDE 3: PM WORK ===== */
+    #s3 {
+      display: flex;
+      flex-direction: column;
+      padding: 44px 0 44px;
+    }
+
+    .s3-header {
+      padding: 24px 44px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .s3-context {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted-2);
+      font-weight: 300;
+      margin-top: 10px;
+      max-width: 720px;
+    }
+
+    /* Hidden on desktop, shown on mobile via media query */
+    .pm-cards-mobile {
+      display: none;
+    }
+
+    /* 3-column layout on web: tabs | detail-text | metrics */
+    .pm-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr 200px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .pm-tabs {
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .pm-tab {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .pm-tab:hover {
+      background: var(--surface);
+    }
+
+    .pm-tab.active {
+      background: var(--surface-2);
+      border-left-color: var(--orange);
+    }
+
+    .pm-tab-co {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      margin-bottom: 3px;
+    }
+
+    .pm-tab.active .pm-tab-co {
+      color: var(--muted);
+    }
+
+    .pm-tab-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .pm-tab.active .pm-tab-name {
+      color: var(--cream);
+    }
+
+    .pm-tab-metric {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted-2);
+      margin-top: 3px;
+    }
+
+    .pm-tab.active .pm-tab-metric {
+      color: var(--orange);
+    }
+
+    /* Middle column: explanation text */
+    .pm-detail {
+      padding: 28px 32px;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+
+    .pm-detail.active {
+      display: flex;
+    }
+
+    .pm-detail-co {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .pm-detail-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .pm-detail-body {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 0;
+      flex: 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .pm-detail-body strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .pm-detail-body em {
+      color: var(--orange);
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    /* Right column: impact metrics stacked vertically */
+    #pmMetricsPane {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .pm-metrics-panel {
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      padding: 28px 24px;
+      flex: 1;
+    }
+
+    .pm-metrics-panel.active {
+      display: flex;
+    }
+
+    .pm-metrics-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      margin-bottom: 14px;
+    }
+
+    .pm-metric-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+    }
+
+    .pm-metric-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .pm-metric-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+    }
+
+    /* ===== SLIDE 4: WHY JAYANT ===== */
+    #s4 {
+      display: flex;
+      flex-direction: column;
+      padding: 44px 0 44px;
+    }
+
+    .s4-header {
+      padding: 24px 48px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .s4-headline {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: clamp(22px, 2.8vw, 38px);
+      line-height: 1.3;
+      color: var(--cream);
+      max-width: 820px;
+    }
+
+    .s4-subline {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 680px;
+    }
+
+    .s4-subline a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    .s4-body {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .dt-left {
+      padding: 24px 36px 20px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      gap: 16px;
+    }
+
+    .dt-right {
+      padding: 24px 32px 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .dt-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0;
+    }
+
+    .dt-pull-quote {
+      border-left: 2px solid var(--border-light);
+      padding-left: 16px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--cream);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .dt-narrative {
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 0;
+    }
+
+    .dt-narrative strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .dt-example {
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 4px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .dt-example:hover {
+      background: var(--surface);
+      border-color: var(--border-light);
+    }
+
+    .dt-example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--orange);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .dt-example-body {
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--cream);
+      font-weight: 300;
+    }
+
+    .dt-example-body strong {
+      font-weight: 500;
+    }
+
+    .dt-examples-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .dt-examples-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+
+    /* Right panel — bordered card */
+    .dt-right-card {
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background: var(--surface);
+    }
+
+    .dt-right-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .dt-right-headline {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(16px, 1.6vw, 22px);
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .dt-temple-narrative {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--cream);
+      font-weight: 300;
+      flex: 1;
+    }
+
+    .dt-temple-narrative strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .dt-temple-narrative em {
+      color: var(--orange);
+      font-style: italic;
+      display: block;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .s4-footer {
+      padding: 12px 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      min-height: 44px;
+    }
+
+    .s4-footer-text {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .s4-footer-text strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .cap-list {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      flex: 1;
+    }
+
+    .cap-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .cap-row:last-child {
+      border-bottom: none;
+    }
+
+    .cap-row:hover {
+      background: var(--surface);
+    }
+
+    .cap-icon {
+      width: 44px;
+      height: 44px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+
+    .cap-content {
+      padding: 10px 16px;
+    }
+
+    .cap-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .cap-desc {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.45;
+    }
+
+    .built-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .built-items {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .built-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.25s;
+      cursor: default;
+    }
+
+    .built-item:hover {
+      background: var(--surface-3);
+      border-color: var(--border-light);
+    }
+
+    .built-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .built-impact {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .built-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .built-item:hover .built-tag {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .tool-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.5px;
+      padding: 3px 9px;
+      border: 1px solid var(--border);
+      color: var(--muted-2);
+      transition: all 0.2s;
+    }
+
+    .tool-chip.hot {
+      border-color: var(--orange);
+      color: var(--orange);
+      background: var(--orange-glow);
+    }
+
+    /* ===== SLIDE 5: WHY TEMPLE ===== */
+    #s5 {
+      display: flex;
+      flex-direction: column;
+      padding: 44px 0 44px;
+    }
+
+    .s5-content {
+      padding: 28px 48px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    .through-line {
+      border-left: 3px solid var(--orange);
+      padding-left: 28px;
+      max-width: 740px;
+      margin: 16px 0 36px;
+    }
+
+    .through-line-hook {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(20px, 2.6vw, 30px);
+      line-height: 1.3;
+      color: var(--cream);
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .through-line-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .through-line-text strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .commit-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+      margin-bottom: 28px;
+    }
+
+    .commit-cell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px 18px;
+      transition: all 0.25s;
+    }
+
+    .commit-cell:hover {
+      border-color: var(--border-light);
+    }
+
+    .commit-cell.hot {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .commit-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px;
+      line-height: 1;
+      color: var(--cream);
+    }
+
+    .commit-num span {
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .commit-cell.hot .commit-num {
+      color: #fff;
+    }
+
+    .commit-cell.hot .commit-num span {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .commit-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .commit-cell.hot .commit-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .final-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 2px;
+    }
+
+    .cta-primary {
+      background: var(--orange);
+      color: #fff;
+      border: 1px solid var(--orange);
+      padding: 12px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .cta-primary:hover {
+      background: var(--orange-dim);
+    }
+
+    .cta-secondary {
+      background: transparent;
+      color: var(--cream);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .cta-secondary:hover {
+      background: var(--surface);
+      border-color: var(--cream);
+    }
+
+    .final-meta {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted-2);
+      line-height: 1.9;
+    }
+
+    .final-meta a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    .closing-statement {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--orange);
+      margin-top: 16px;
+      opacity: 0.8;
+      font-weight: 400;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide.active .section-tag,
+    .slide.active .section-title,
+    .slide.active .hero-top,
+    .slide.active .hero-pillars,
+    .slide.active .hero-bottom,
+    .slide.active .timeline,
+    .slide.active .fitness-right>*,
+    .slide.active .pm-grid,
+    .slide.active .through-line,
+    .slide.active .commit-grid,
+    .slide.active .final-row,
+    .slide.active .s4-header,
+    .slide.active .s4-body,
+    .slide.active .s4-footer {
+      animation: fadeUp 0.45s ease forwards;
+    }
+
+    .slide.active .hero-top {
+      animation-delay: 0.02s;
+    }
+
+    .slide.active .hero-pillars {
+      animation-delay: 0.08s;
+    }
+
+    .slide.active .hero-bottom {
+      animation-delay: 0.14s;
+    }
+
+    .slide.active .section-title {
+      animation-delay: 0.04s;
+    }
+
+    .slide.active .timeline {
+      animation-delay: 0.06s;
+    }
+
+    .slide.active .pm-grid {
+      animation-delay: 0.06s;
+    }
+
+    .slide.active .through-line {
+      animation-delay: 0.06s;
+    }
+
+    .slide.active .commit-grid {
+      animation-delay: 0.1s;
+    }
+
+    .slide.active .final-row {
+      animation-delay: 0.14s;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+
+      /* Allow all slides to scroll vertically on mobile */
+      .slide {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Slide 2 */
+      #s2 {
+        grid-template-columns: 1fr;
+      }
+
+      .fitness-right {
+        border-top: 1px solid var(--border);
+      }
+
+      .fitness-left {
+        border-right: none;
+      }
+
+      /* Slide 1 */
+      .hero-pillars {
+        flex-direction: column;
+        margin-top: 24px;
+      }
+
+      /* Slide 3 - stack header + sticky tabs + scrollable content */
+      #s3 {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pm-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        flex: 1;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pm-tabs {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        flex-shrink: 0;
+        position: sticky;
+        top: 44px;
+        /* height of topbar */
+        z-index: 50;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .pm-tab {
+        border-bottom: none;
+        border-left: none;
+        border-top: 2px solid transparent;
+        flex: 1;
+        text-align: center;
+        min-width: 110px;
+        white-space: nowrap;
+        padding: 12px 14px;
+      }
+
+      .pm-tab.active {
+        border-left-color: transparent;
+        border-top-color: var(--orange);
+        background: var(--surface-2);
+      }
+
+      #pmDetailPane {
+        overflow-y: visible;
+        flex: 1;
+      }
+
+      .pm-detail {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      #pmMetricsPane {
+        overflow-y: visible;
+        flex-shrink: 0;
+      }
+
+      .pm-metrics-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2px;
+        padding: 20px 24px;
+      }
+
+      .pm-metric-box {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      /* Slide 4 */
+      .s4-body {
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+
+      .dt-right {
+        border-top: 1px solid var(--border);
+      }
+
+      .dt-left {
+        border-right: none;
+        overflow-y: visible;
+      }
+
+      .s4-header {
+        padding: 16px 24px;
+      }
+
+      .dt-left,
+      .dt-right {
+        padding: 16px 24px;
+        overflow-y: visible;
+      }
+
+      .s4-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 24px;
+      }
+
+      .tool-row {
+        padding-top: 8px;
+      }
+
+      .dt-examples-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      /* Slide 5 */
+      .s5-content {
+        padding: 24px;
+      }
+
+      .through-line {
+        margin: 12px 0 24px;
+      }
+
+      .commit-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .final-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .final-meta {
+        text-align: left;
+      }
+
+      /* Mobile Header Overlap fix */
+      .topbar {
+        padding: 8px 20px;
+        flex-wrap: wrap;
+        height: auto;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .topbar-center {
+        position: static;
+        transform: none;
+        width: 100%;
+        text-align: center;
+        order: -1;
+      }
+
+      .topbar-left,
+      .topbar-right {
+        font-size: 9px;
+      }
+
+      .ghost-text {
+        display: none;
+      }
+    }
+
+    /* ===== MOBILE IA (≤768px) ===== */
+    /* Slides become a vertically scrolling document — NOT a carousel */
+    @media (max-width: 768px) {
+
+      /* 1. Scroll engine reset */
+      html,
+      body {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: auto;
+      }
+
+      .deck {
+        height: auto;
+        overflow: visible;
+        padding-top: 60px;
+        /* topbar height */
+        padding-bottom: 56px;
+        /* bottombar height */
+      }
+
+      .slide {
+        position: relative;
+        inset: unset;
+        opacity: 1 !important;
+        pointer-events: all !important;
+        transform: none !important;
+        display: block;
+        min-height: 100svh;
+        border-bottom: 1px solid var(--border);
+        overflow: visible;
+      }
+
+      /* 2. Topbar — single line, centered name only */
+      .topbar {
+        height: 60px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: 0;
+      }
+
+      .topbar-left {
+        display: none;
+      }
+
+      .topbar-right {
+        display: none;
+      }
+
+      .topbar-center {
+        position: static;
+        transform: none;
+        font-size: 10px;
+        letter-spacing: 3px;
+        text-align: center;
+      }
+
+      /* 3. Bottombar — progress + arrows only */
+      .bottombar {
+        height: 56px;
+        padding: 0 20px;
+        position: fixed;
+        bottom: 0;
+      }
+
+      .key-hint {
+        display: none;
+      }
+
+      .slide-indicators {
+        display: none;
+      }
+
+      .progress-track {
+        max-width: none;
+        flex: 1;
+        margin: 0 16px;
+      }
+
+      /* ===== SLIDE 1: Hero ===== */
+      #s1 {
+        padding: 28px 0 0;
+        justify-content: flex-start;
+        gap: 0;
+      }
+
+      .hero-top {
+        padding: 0 24px;
+      }
+
+      .hero-headline {
+        font-size: clamp(22px, 7vw, 30px);
+        max-width: none;
+      }
+
+      .hero-subline {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        flex-wrap: wrap;
+      }
+
+      .hero-pillars {
+        flex-direction: column;
+        gap: 8px;
+        padding: 24px 24px 0;
+        margin-top: 28px;
+        margin-bottom: 0;
+        flex: initial;
+      }
+
+      .hero-pillar {
+        border-radius: 4px;
+        padding: 16px 18px;
+      }
+
+      .hero-bottom {
+        display: none;
+      }
+
+      /* contact is on Slide 5 */
+
+      /* ===== SLIDE 2: The Athlete ===== */
+      #s2 {
+        grid-template-columns: 1fr;
+        padding: 28px 0 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .fitness-left {
+        padding: 24px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        overflow: visible;
+      }
+
+      .fitness-right {
+        padding: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        border-top: none;
+        overflow: visible;
+        align-content: start;
+      }
+
+      .commitment-box {
+        grid-column: 1 / -1;
+        margin-top: 0;
+      }
+
+      .tl-year {
+        font-size: 9px;
+        padding-top: 12px;
+      }
+
+      .section-title {
+        font-size: clamp(20px, 6vw, 28px);
+        margin-bottom: 20px;
+      }
+
+      /* ===== SLIDE 3: PM Work ===== */
+      #s3 {
+        padding: 28px 0 0;
+      }
+
+      .s3-header {
+        padding: 0 24px 16px;
+      }
+
+      /* Hide desktop tab layout on mobile */
+      .pm-grid {
+        display: none;
+      }
+
+      /* Mobile card layout */
+      .pm-cards-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px 20px 28px;
+      }
+
+      .pm-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: border-color 0.2s;
+      }
+
+      .pm-card.open {
+        border-color: var(--border-light);
+      }
+
+      .pm-card-header {
+        padding: 16px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .pm-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .pm-card-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted-2);
+      }
+
+      .pm-card-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--cream);
+      }
+
+      .pm-card-metrics {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+
+      .pm-card-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .pm-card-stat-num {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 34px;
+        line-height: 1;
+        color: var(--orange);
+      }
+
+      .pm-card-stat-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .pm-read-more {
+        background: none;
+        border: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--orange);
+        cursor: pointer;
+        padding: 0;
+        align-self: flex-end;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+        margin-bottom: 2px;
+        letter-spacing: 0.2px;
+      }
+
+      .pm-read-more-arrow {
+        display: inline-block;
+        transition: transform 0.3s ease;
+        font-size: 10px;
+      }
+
+      .pm-card.open .pm-read-more-arrow {
+        transform: rotate(180deg);
+      }
+
+      .pm-card-detail {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .pm-card.open .pm-card-detail {
+        max-height: 600px;
+      }
+
+      .pm-card-detail-inner {
+        padding: 0 18px 20px;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+        font-size: 13px;
+        line-height: 1.75;
+        color: var(--muted);
+      }
+
+      .pm-card-detail-inner strong {
+        color: var(--cream);
+        font-weight: 500;
+      }
+
+      .pm-card-detail-inner em {
+        color: var(--orange);
+        font-style: italic;
+      }
+
+      /* ===== SLIDE 4: Why Jayant ===== */
+      #s4 {
+        padding: 28px 0 0;
+      }
+
+      .s4-header {
+        padding: 0 24px 16px;
+      }
+
+      .s4-headline {
+        font-size: clamp(15px, 4.5vw, 20px);
+      }
+
+      .s4-body {
+        grid-template-columns: 1fr;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dt-left {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 20px 24px;
+        overflow: visible;
+      }
+
+      .dt-right {
+        padding: 20px 24px;
+        overflow: visible;
+        border-top: none;
+      }
+
+      .dt-examples-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .s4-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 24px;
+      }
+
+      .tool-row {
+        padding-top: 8px;
+      }
+
+      /* ===== SLIDE 5: Why Temple ===== */
+      #s5 {
+        padding: 28px 0 0;
+      }
+
+      .s5-content {
+        padding: 28px 24px 24px;
+      }
+
+      .through-line {
+        font-size: clamp(28px, 9vw, 44px);
+        line-height: 1.1;
+        margin: 12px 0 28px;
+      }
+
+      .commit-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .final-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .final-meta {
+        text-align: left;
+        font-size: 10px;
+      }
+
+      .ghost-text {
+        display: none;
+      }
+
+      .closing-statement {
+        text-align: center;
+        margin-top: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-grain"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left"><span>01</span> / 05</div>
+    <div class="topbar-center">Jayant Chauhan</div>
+    <div class="topbar-right">Application — Temple by Zomato</div>
+  </div>
+
+  <div class="deck">
+
+    <!-- ===== SLIDE 1: HERO ===== -->
+    <div class="slide active" id="s1">
+      <div class="hero-top">
+        <div class="hero-headline">Hardware only matters if the user<br>reaches the insight it promises.<br><em>I've
+            spent a year proving that.</em></div>
+        <div class="hero-subline">Jayant Chauhan · Product Manager · 6 years</div>
+      </div>
+      <div class="hero-pillars">
+        <div class="hero-pillar">
+          <div class="hero-pillar-num">01</div>
+          <div class="hero-pillar-title">Deeptech Healthtech PM</div>
+          <div class="hero-pillar-body">First Growth PM at Inito — a medical-grade fertility hormone monitor. Operated
+            where hardware, clinical data, legal compliance, and human emotion intersect. Built systems that ensured
+            users reached product value, not just purchased it.</div>
+          <div class="hero-pillar-arrow">→ $13M+ ARR built across initiatives</div>
+        </div>
+        <div class="hero-pillar">
+          <div class="hero-pillar-num">02</div>
+          <div class="hero-pillar-title">The Athlete</div>
+          <div class="hero-pillar-body">Sports kid. Rebuilt my body from 88kg. Co-founded a 600+ member football
+            community in Bangalore. Hit 15.8% body fat Sep 2025. At 18% today. Back at 15% by May 27th.<br><br><strong>I
+              don't just understand athletes — I am one.</strong></div>
+        </div>
+        <div class="hero-pillar">
+          <div class="hero-pillar-num">03</div>
+          <div class="hero-pillar-title">Complete PM</div>
+          <div class="hero-pillar-body">Researches like a scientist.<br>Designs in Figma. Codes with AI.<br>Ships the
+            full loop without handholding.</div>
+        </div>
+      </div>
+      <div class="hero-bottom">
+        <div class="hero-bottom-text">Temple is building hardware where the device only matters if the athlete reaches
+          the insight it promises. That's exactly the problem I've been solving — for a different human.</div>
+        <div class="hero-contact">
+          <a href="mailto:jayant.chauhan.mec16@iitbhu.ac.in">jayant.chauhan.mec16@iitbhu.ac.in</a><br>
+          +91 78385 82245 · Bengaluru<br>
+          IIT BHU · Mechanical Engineering
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SLIDE 2: FITNESS ===== -->
+    <div class="slide" id="s2">
+      <div class="fitness-left">
+        <div class="section-tag">01 — The Athlete</div>
+        <div class="section-title">Fitness changed how I think,<br>not just how I look.</div>
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-year">Pre 2019</div>
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+              <div class="tl-connector"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-event">Sports kid → JEE destroyed it</div>
+              <div class="tl-detail">88kg, bad posture, zero movement. Years of ignoring the body to chase grades.</div>
+            </div>
+          </div>
+          <div class="tl-row hot">
+            <div class="tl-year">Dec 2019</div>
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+              <div class="tl-connector"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-event">The reset — 88kg to 78kg in 6 months</div>
+              <div class="tl-detail">Started gym. Lost 10kg. Fixed my diet, then my parents'. Stopped thinking about
+                weight. Started understanding the body as a system — sleep, food, recovery, stress.</div>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-year">Dec 2022</div>
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+              <div class="tl-connector"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-event">Returned to sport. Built a community.</div>
+              <div class="tl-detail">Co-founded 600+ member football community in Bangalore. Football taught what the
+                gym couldn't — reading people, leading without authority, managing energy in the 80th minute. Better
+                manager on pitch before I was one at work.</div>
+            </div>
+          </div>
+          <div class="tl-row hot">
+            <div class="tl-year">Sep 2025</div>
+            <div class="tl-line-col">
+              <div class="tl-dot"></div>
+            </div>
+            <div class="tl-body">
+              <div class="tl-event">45-day hard challenge → 15.8% body fat</div>
+              <div class="tl-detail">Today: 18%. Life tested consistency. Back to 15% by May 27th — the day I'd join.
+                I've been there. I know exactly how.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fitness-right">
+        <div class="fit-stat hot">
+          <div class="fit-stat-num">15.8<span>%</span></div>
+          <div class="fit-stat-label">Body fat peak · Sep 2025</div>
+        </div>
+        <div class="fit-stat">
+          <div class="fit-stat-num">88<span>→78</span></div>
+          <div class="fit-stat-label">kg in 6 months</div>
+        </div>
+        <div class="fit-stat">
+          <div class="fit-stat-num">600<span>+</span></div>
+          <div class="fit-stat-label">Football community · Bangalore</div>
+        </div>
+        <div class="fit-stat">
+          <div class="fit-stat-num">May 27</div>
+          <div class="fit-stat-label">Joining date · back at 15%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SLIDE 3: PM WORK ===== -->
+    <div class="slide" id="s3">
+      <div class="s3-header">
+        <div class="section-tag">02 — Deeptech Growth PM at Inito</div>
+        <div class="section-title" style="margin-bottom:0; font-size: clamp(20px,2.6vw,28px);">The PM job here isn't to
+          optimize metrics. It's to understand what a woman in this journey actually needs — which is almost never what
+          it looks like on the surface.</div>
+        <div class="s3-context">Inito is a fertility monitor that tracks LH, PdG, FSH and estrogen — giving women deeper
+          insight into their menstrual cycles and ovulation patterns than any other device.</div>
+      </div>
+
+      <!-- Desktop: tab layout -->
+      <div class="pm-grid">
+        <div class="pm-tabs" id="pmTabs">
+          <div class="pm-tab active" onclick="showPM(0)">
+            <div class="pm-tab-co">Initiative 1</div>
+            <div class="pm-tab-name">Teleconsultation</div>
+            <div class="pm-tab-metric">+24% conversion · 48% opt-in</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(1)">
+            <div class="pm-tab-co">Initiative 2</div>
+            <div class="pm-tab-name">LTV / Churn</div>
+            <div class="pm-tab-metric">Churn 18.5%→17% · Sub 4%→10%</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(2)">
+            <div class="pm-tab-co">The Pattern</div>
+            <div class="pm-tab-name">Why This Matters for Temple</div>
+            <div class="pm-tab-metric">→ The muscle Temple needs</div>
+          </div>
+        </div>
+        <div id="pmDetailPane">
+          <div class="pm-detail active" id="pm0">
+            <div class="pm-detail-co">The non-obvious insight</div>
+            <div class="pm-detail-title">Teleconsultation</div>
+            <div class="pm-detail-body"><strong>Surface problem:</strong> 70% of non-converters weren't
+              buying.<br><br><strong>What most PMs would do:</strong> Hire fertility experts. Build a chat
+              widget.<br><br><strong>What we actually did:</strong> Went 25+ interviews deep into how fertility coaches
+              and OBGYNs actually talk to women in this moment — the language they use, the fears they address, the
+              sequence they follow.<br><br>Then built SOPs that replicated that environment. Not experts on call. A
+              system that thinks and communicates like one.<br><br><em>The insight: women in this category don't need
+                information. They need to feel like someone who understands their specific situation is guiding
+                them.</em></div>
+          </div>
+          <div class="pm-detail" id="pm1">
+            <div class="pm-detail-co">The non-obvious insight</div>
+            <div class="pm-detail-title">LTV / Churn</div>
+            <div class="pm-detail-body"><strong>Surface problem:</strong> High churn after cycle 1 and cycle
+              2.<br><br><strong>What most PMs would do:</strong> Push more strips. Discount. Remind
+              users.<br><br><strong>What we actually found:</strong> The inflection point in a woman's decision to
+              continue using Inito isn't purchase. It isn't even usage. It's <strong>ovulation
+                confirmation.</strong><br><br>When she sees her hormone pattern and gets confirmation that she ovulated
+              — she trusts the product. She continues. She doesn't churn.<br><br>But getting to ovulation confirmation
+              depends entirely on her biological cycle — not her intent. Women were running out of strips before their
+              body reached ovulation. No confirmation. No value. Churn.<br><br><strong>The reframe:</strong> Strips
+              aren't consumable inventory. They are the gating mechanism for value realization.<br><br><strong>What we
+                built:</strong><br>· Checkout bundles sized to biological cycle length, not average purchase
+              behavior<br>· Subscription redesigned around user psychology — cancel anytime, refund unused strips,
+              flexible continuity not recurring obligation</div>
+          </div>
+          <div class="pm-detail" id="pm2">
+            <div class="pm-detail-co">The pattern across both</div>
+            <div class="pm-detail-title">That's the muscle Temple needs.</div>
+            <div class="pm-detail-body">The answer was never on the surface. It required going deep enough to understand
+              what the user actually cares about — which in a category this personal, this biological, this emotionally
+              loaded, is almost never what it looks like from the outside.<br><br><strong>Athletes are the
+                same.</strong><br><br>The insight that changes performance is almost never the obvious one.</div>
+          </div>
+        </div>
+        <div id="pmMetricsPane">
+          <div class="pm-metrics-panel active" id="pmet0">
+            <div class="pm-metrics-label">Impact</div>
+            <div class="pm-metric-box">
+              <div class="pm-metric-num">+24%</div>
+              <div class="pm-metric-label">Conversion lift</div>
+            </div>
+            <div class="pm-metric-box" style="margin-top:2px">
+              <div class="pm-metric-num">48%</div>
+              <div class="pm-metric-label">Opt-in rate</div>
+            </div>
+          </div>
+          <div class="pm-metrics-panel" id="pmet1">
+            <div class="pm-metrics-label">Impact</div>
+            <div class="pm-metric-box">
+              <div class="pm-metric-num">18.5→17%</div>
+              <div class="pm-metric-label">Churn reduced</div>
+            </div>
+            <div class="pm-metric-box" style="margin-top:2px">
+              <div class="pm-metric-num">4→10%</div>
+              <div class="pm-metric-label">Subscription rate</div>
+            </div>
+          </div>
+          <div class="pm-metrics-panel" id="pmet2">
+            <div class="pm-metrics-label">The through-line</div>
+            <div class="pm-metric-box">
+              <div class="pm-metric-num" style="font-size:22px; line-height:1.3">Go deeper than the surface</div>
+              <div class="pm-metric-label" style="margin-top:8px">The pattern that made it work</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile: expandable cards -->
+      <div class="pm-cards-mobile">
+
+        <div class="pm-card" id="pmCard0">
+          <div class="pm-card-header">
+            <div class="pm-card-top">
+              <div>
+                <div class="pm-card-label">Initiative 1</div>
+                <div class="pm-card-title">Teleconsultation</div>
+              </div>
+            </div>
+            <div class="pm-card-metrics">
+              <div style="display:flex; gap:24px;">
+                <div class="pm-card-stat">
+                  <div class="pm-card-stat-num">+24%</div>
+                  <div class="pm-card-stat-label">Conversion lift</div>
+                </div>
+                <div class="pm-card-stat">
+                  <div class="pm-card-stat-num">48%</div>
+                  <div class="pm-card-stat-label">Opt-in rate</div>
+                </div>
+              </div>
+              <button class="pm-read-more" onclick="togglePMCard(0)">Read more <span
+                  class="pm-read-more-arrow">↓</span></button>
+            </div>
+          </div>
+          <div class="pm-card-detail">
+            <div class="pm-card-detail-inner">
+              <strong>Surface problem:</strong> 70% of non-converters weren't buying.<br><br>
+              <strong>What most PMs would do:</strong> Hire fertility experts. Build a chat widget.<br><br>
+              <strong>What we actually did:</strong> Went 25+ interviews deep into how fertility coaches and OBGYNs
+              actually talk to women in this moment — the language they use, the fears they address, the sequence they
+              follow.<br><br>
+              Then built SOPs that replicated that environment. Not experts on call. A system that thinks and
+              communicates like one.<br><br>
+              <em>The insight: women in this category don't need information. They need to feel like someone who
+                understands their specific situation is guiding them.</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="pm-card" id="pmCard1">
+          <div class="pm-card-header">
+            <div class="pm-card-top">
+              <div>
+                <div class="pm-card-label">Initiative 2</div>
+                <div class="pm-card-title">LTV / Churn</div>
+              </div>
+            </div>
+            <div class="pm-card-metrics">
+              <div style="display:flex; gap:24px;">
+                <div class="pm-card-stat">
+                  <div class="pm-card-stat-num">18→17%</div>
+                  <div class="pm-card-stat-label">Churn reduced</div>
+                </div>
+                <div class="pm-card-stat">
+                  <div class="pm-card-stat-num">4→10%</div>
+                  <div class="pm-card-stat-label">Subscription rate</div>
+                </div>
+              </div>
+              <button class="pm-read-more" onclick="togglePMCard(1)">Read more <span
+                  class="pm-read-more-arrow">↓</span></button>
+            </div>
+          </div>
+          <div class="pm-card-detail">
+            <div class="pm-card-detail-inner">
+              <strong>Surface problem:</strong> High churn after cycle 1 and cycle 2.<br><br>
+              <strong>What most PMs would do:</strong> Push more strips. Discount. Remind users.<br><br>
+              <strong>What we actually found:</strong> The inflection point isn't purchase or usage — it's
+              <strong>ovulation confirmation.</strong><br><br>
+              When she sees her hormone pattern and confirms ovulation, she trusts the product. But women were running
+              out of strips before ovulation. No confirmation. No value. Churn.<br><br>
+              <strong>The reframe:</strong> Strips aren't consumable inventory. They are the gating mechanism for value
+              realization.<br><br>
+              <strong>What we built:</strong><br>
+              · Checkout bundles sized to biological cycle length<br>
+              · Subscription redesigned around user psychology — cancel anytime, refund unused strips
+            </div>
+          </div>
+        </div>
+
+        <div class="pm-card" id="pmCard2">
+          <div class="pm-card-header">
+            <div class="pm-card-top">
+              <div>
+                <div class="pm-card-label">The Pattern</div>
+                <div class="pm-card-title">Why This Matters for Temple</div>
+              </div>
+            </div>
+            <div class="pm-card-metrics">
+              <div style="display:flex; gap:24px;"></div>
+              <button class="pm-read-more" onclick="togglePMCard(2)">Read more <span
+                  class="pm-read-more-arrow">↓</span></button>
+            </div>
+          </div>
+          <div class="pm-card-detail">
+            <div class="pm-card-detail-inner">
+              The answer was never on the surface. It required going deep enough to understand what the user actually
+              cares about — which in a category this personal, this biological, this emotionally loaded, is almost never
+              what it looks like from the outside.<br><br>
+              <strong>Athletes are the same.</strong><br><br>
+              The insight that changes performance is almost never the obvious one.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== SLIDE 4: WHY JAYANT ===== -->
+    <div class="slide" id="s4">
+      <div class="s4-header">
+        <div class="section-tag">03 — Why Jayant for Temple</div>
+        <div class="s4-headline">Temple is building something that has never existed before.<br>You don't need a PM with
+          a playbook — you need one who builds from first principles.</div>
+        <div class="s4-subline">That's the muscle I built at <span style="color:var(--orange)">Inito</span>, navigating
+          the chaotic intersection of biology and human behavior.</div>
+      </div>
+      <div class="s4-body">
+        <div class="dt-left">
+          <div class="dt-section-label">The Depth Habit</div>
+          <div class="dt-pull-quote">"Fertility is a category where surface-level thinking fails immediately. Cycles
+            aren't uniform; biology varies wildly. The only way to solve problems here was to go uncomfortably deep —
+            studying hormone biology and talking to OBGYNs before touching Figma."</div>
+          <div class="dt-examples-grid">
+            <div class="dt-example">
+              <div class="dt-example-title">Example 01 — Quiz Funnel</div>
+              <div class="dt-example-body">Mapped hormonal signatures and emotional states (hopeful vs. exhausted)
+                across the TTC journey.<br><br><strong>Built from biology, not intuition.</strong></div>
+            </div>
+            <div class="dt-example">
+              <div class="dt-example-title">Example 02 — Teleconsultation</div>
+              <div class="dt-example-body">Studied fertility coach sequencing and trust-building. The system thought
+                like an expert because we understood how experts think.</div>
+            </div>
+          </div>
+        </div>
+        <div class="dt-right">
+          <div class="dt-right-card">
+            <div class="dt-right-label">Why This Matters</div>
+            <div class="dt-right-headline">Athletic performance is the same category.</div>
+            <div class="dt-temple-narrative">
+              Neuroscience, biomechanics, recovery biology — the answers live in the science, not in what seems
+              obvious.<br><br>
+              Temple needs a PM who will read the papers and talk to the athletes, not one who copies what worked at
+              another wearable company.<br><br>
+              <em>I'm ready to apply this to yours.</em>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="s4-footer">
+        <div class="s4-footer-text"><strong>Designs in Figma</strong> · <strong>Codes with AI</strong> · Ships the full
+          loop · No handholding needed</div>
+        <div class="tool-row" style="margin-top:0; padding-top:0; border-top:none;">
+          <div class="tool-chip hot">Figma</div>
+          <div class="tool-chip hot">LangChain</div>
+          <div class="tool-chip hot">RAG</div>
+          <div class="tool-chip hot">n8n</div>
+          <div class="tool-chip">Python</div>
+          <div class="tool-chip">SQL</div>
+          <div class="tool-chip">Mixpanel</div>
+          <div class="tool-chip">GA4</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SLIDE 5: WHY TEMPLE ===== -->
+    <div class="slide" id="s5">
+      <div class="s5-content">
+        <div>
+          <div class="section-tag">04 — Why Temple</div>
+          <div class="through-line">
+            <div class="through-line-hook">Every job I've taken followed one rule: I have to be the user.</div>
+            <div class="through-line-text">"I've spent years optimizing my body as a system. Building the product that
+              does this for others isn't a pivot — it's the obvious next step."</div>
+          </div>
+        </div>
+        <div class="commit-grid">
+          <div class="commit-cell">
+            <div class="commit-num">6<span>yrs</span></div>
+            <div class="commit-label">Building consumer products</div>
+          </div>
+          <div class="commit-cell">
+            <div class="commit-num">$10M+</div>
+            <div class="commit-label">ARR verticals built from zero</div>
+          </div>
+          <div class="commit-cell hot">
+            <div class="commit-num">15.8<span>%</span></div>
+            <div class="commit-label">Body fat · InBody verified</div>
+          </div>
+          <div class="commit-cell">
+            <div class="commit-num">713</div>
+            <div class="commit-label">Football community · Co-founder</div>
+          </div>
+          <div class="commit-cell">
+            <div class="commit-num">IIT</div>
+            <div class="commit-label">BHU · Mech Eng · Top 10%</div>
+          </div>
+        </div>
+        <div class="final-row">
+          <div class="cta-group">
+            <a class="cta-primary" href="https://www.linkedin.com/in/jayantchauhan1797/" target="_blank">LinkedIn ↗</a>
+            <a class="cta-secondary" href="https://github.com/jayaNTCH1797/" target="_blank">GitHub ↗</a>
+            <a class="cta-secondary" href="mailto:jayant.chauhan.mec16@iitbhu.ac.in">Email ↗</a>
+          </div>
+          <div class="final-meta">
+            Jayant Chauhan · Bengaluru<br>
+            <a href="mailto:jayant.chauhan.mec16@iitbhu.ac.in">jayant.chauhan.mec16@iitbhu.ac.in</a> · +91 78385 82245
+          </div>
+        </div>
+        <div class="closing-statement">"Come find your tribe. I've been looking for mine."</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottombar">
+    <div class="nav-controls">
+      <button class="nav-btn" onclick="prevSlide()">←</button>
+      <button class="nav-btn" onclick="nextSlide()">→</button>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:20%"></div>
+    </div>
+    <div class="slide-indicators">
+      <div class="ind active" onclick="goTo(0)"></div>
+      <div class="ind" onclick="goTo(1)"></div>
+      <div class="ind" onclick="goTo(2)"></div>
+      <div class="ind" onclick="goTo(3)"></div>
+      <div class="ind" onclick="goTo(4)"></div>
+    </div>
+    <div class="key-hint">← → to navigate</div>
+  </div>
+
+  <script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const inds = document.querySelectorAll('.ind');
+    const progressFill = document.getElementById('progressFill');
+    const counter = document.querySelector('.topbar-left');
+
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+    // ── Desktop carousel mode ──
+    function goTo(n) {
+      if (isMobile()) { scrollToSlide(n); return; }
+      slides[current].classList.remove('active');
+      inds[current].classList.remove('active');
+      current = n;
+      slides[current].classList.add('active');
+      inds[current].classList.add('active');
+      progressFill.style.width = ((current + 1) / slides.length * 100) + '%';
+      if (counter) counter.innerHTML = '<span>' + String(current + 1).padStart(2, '0') + '</span> / 0' + slides.length;
+    }
+
+    function nextSlide() {
+      if (isMobile()) { scrollToSlide(Math.min(current + 1, slides.length - 1)); return; }
+      if (current < slides.length - 1) goTo(current + 1);
+    }
+
+    function prevSlide() {
+      if (isMobile()) { scrollToSlide(Math.max(current - 1, 0)); return; }
+      if (current > 0) goTo(current - 1);
+    }
+
+    // ── Mobile scroll mode ──
+    function scrollToSlide(n) {
+      current = n;
+      slides[n].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      updateNav(n);
+    }
+
+    function updateNav(n) {
+      current = n;
+      inds.forEach((ind, i) => ind.classList.toggle('active', i === n));
+      progressFill.style.width = ((n + 1) / slides.length * 100) + '%';
+      if (counter) counter.innerHTML = '<span>' + String(n + 1).padStart(2, '0') + '</span> / 0' + slides.length;
+    }
+
+    // IntersectionObserver to track which slide is in view on mobile
+    const observer = new IntersectionObserver((entries) => {
+      if (!isMobile()) return;
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = Array.from(slides).indexOf(entry.target);
+          if (idx !== -1) updateNav(idx);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // Keyboard navigation (desktop only)
+    document.addEventListener('keydown', e => {
+      if (isMobile()) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+    });
+
+    // Touch/swipe (desktop only — mobile uses native scroll)
+    let touchStartX = 0, touchStartY = 0;
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    });
+    document.addEventListener('touchend', e => {
+      if (isMobile()) return; // let native scroll handle it
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      const dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        dx < 0 ? nextSlide() : prevSlide();
+      }
+    });
+
+    // PM tabs - syncs text panel AND metrics panel (desktop)
+    function showPM(i) {
+      document.querySelectorAll('.pm-tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
+      document.querySelectorAll('.pm-detail').forEach((d, idx) => d.classList.toggle('active', idx === i));
+      document.querySelectorAll('.pm-metrics-panel').forEach((m, idx) => m.classList.toggle('active', idx === i));
+    }
+
+    // Mobile expandable cards
+    function togglePMCard(i) {
+      const card = document.getElementById('pmCard' + i);
+      const isOpen = card.classList.contains('open');
+      // Close all first
+      document.querySelectorAll('.pm-card').forEach(c => c.classList.remove('open'));
+      document.querySelectorAll('.pm-read-more').forEach(b => b.childNodes[b.childNodes.length - 1].textContent = ' ↓');
+      // Update button text
+      const btn = card.querySelector('.pm-read-more');
+      if (!isOpen) {
+        card.classList.add('open');
+        btn.innerHTML = 'Show less <span class="pm-read-more-arrow" style="transform:rotate(180deg); display:inline-block;">↓</span>';
+      } else {
+        btn.innerHTML = 'Read more <span class="pm-read-more-arrow">↓</span>';
+      }
+    }
+  </script>
+</body>
+
+</html>

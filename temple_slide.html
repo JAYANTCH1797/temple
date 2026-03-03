@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jayant Chauhan — Temple</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF4D00;
+    --dark: #0A0A0A;
+    --off-white: #F2EDE6;
+    --muted: #8A8278;
+    --card: #141414;
+    --border: #2A2A2A;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--dark);
+    color: var(--off-white);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* SLIDE CONTAINER */
+  .deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(20px);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    background: rgba(20,20,20,0.9);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 100px;
+    backdrop-filter: blur(10px);
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .dot.active { background: var(--orange); width: 24px; border-radius: 4px; }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-btn:hover { color: var(--off-white); }
+
+  /* SLIDE LABEL */
+  .slide-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 32px;
+  }
+
+  /* TYPOGRAPHY */
+  .display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 9vw, 120px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    color: var(--off-white);
+  }
+
+  .display span { color: var(--orange); }
+
+  .serif {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+  }
+
+  .body-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #B0A89E;
+    font-weight: 300;
+    max-width: 560px;
+  }
+
+  .body-text strong { color: var(--off-white); font-weight: 500; }
+
+  /* SLIDE 1 — HERO */
+  #s1 {
+    justify-content: center;
+    gap: 0;
+  }
+
+  #s1 .eyebrow {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  #s1 .tagline {
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 32px;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  #s1 .tagline em {
+    color: var(--orange);
+    font-style: normal;
+  }
+
+  .orange-line {
+    width: 48px; height: 3px;
+    background: var(--orange);
+    margin-bottom: 24px;
+  }
+
+  /* SLIDE 2 — FITNESS */
+  #s2 { justify-content: center; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    flex: 1;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tl-item {
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  .tl-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 24px;
+    bottom: -8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .tl-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 4px;
+    transition: all 0.3s;
+  }
+
+  .tl-item.highlight .tl-dot {
+    background: var(--orange);
+    border-color: var(--orange);
+    box-shadow: 0 0 12px rgba(255,77,0,0.4);
+  }
+
+  .tl-content {
+    padding-bottom: 28px;
+  }
+
+  .tl-year {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .tl-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--off-white);
+    margin-bottom: 4px;
+  }
+
+  .tl-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--border);
+  }
+
+  .stat-card.hot::before { background: var(--orange); }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--off-white);
+  }
+
+  .stat-num span { color: var(--orange); font-size: 32px; }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* SLIDE 3 — INITO */
+  #s3 { justify-content: center; }
+
+  .inito-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 48px;
+    align-items: start;
+    flex: 1;
+    margin-top: 24px;
+  }
+
+  .initiative-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .initiative {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+
+  .initiative:hover, .initiative.active {
+    border-left-color: var(--orange);
+    background: #1A1A1A;
+  }
+
+  .initiative-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--off-white);
+  }
+
+  .initiative-metric {
+    font-size: 12px;
+    color: var(--orange);
+    margin-top: 2px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+  }
+
+  .initiative-detail {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 32px;
+    min-height: 320px;
+  }
+
+  .detail-title {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--off-white);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .detail-body {
+    font-size: 14px;
+    color: #B0A89E;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .detail-metrics {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .dm {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dm-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .dm-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* SLIDE 4 — DESIGN + TECH */
+  #s4 { justify-content: center; }
+
+  .design-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+    flex: 1;
+    margin-top: 24px;
+  }
+
+  .tool-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .tag {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .tag:hover { border-color: var(--orange); color: var(--off-white); }
+  .tag.hot { border-color: var(--orange); color: var(--orange); }
+
+  .build-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .build-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .build-icon {
+    width: 36px; height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .build-text strong {
+    font-size: 14px;
+    color: var(--off-white);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .build-text span {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* SLIDE 5 — WHY TEMPLE */
+  #s5 {
+    justify-content: center;
+  }
+
+  .through-line {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(22px, 3vw, 34px);
+    line-height: 1.4;
+    color: var(--off-white);
+    max-width: 800px;
+    margin-top: 32px;
+    margin-bottom: 48px;
+    border-left: 3px solid var(--orange);
+    padding-left: 32px;
+  }
+
+  .commitment-row {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 40px;
+  }
+
+  .commit-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 24px 32px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .commit-box::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--border);
+  }
+
+  .commit-box.hot::after { background: var(--orange); }
+
+  .commit-box .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--off-white);
+    line-height: 1;
+  }
+
+  .commit-box.hot .num { color: var(--orange); }
+
+  .commit-box .lbl {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .cta-btn {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  .cta-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* CORNER LABEL */
+  .corner-tag {
+    position: fixed;
+    top: 32px;
+    right: 48px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    z-index: 100;
+  }
+
+  .corner-tag span { color: var(--orange); }
+
+  /* SLIDE COUNT */
+  .slide-count {
+    position: fixed;
+    top: 32px;
+    left: 48px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--muted);
+    z-index: 100;
+    letter-spacing: 2px;
+  }
+
+  .slide-count em {
+    color: var(--orange);
+    font-style: normal;
+  }
+
+  /* BG TEXTURE */
+  .bg-grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px;
+  }
+
+  /* ORANGE GLOW */
+  .bg-glow {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,77,0,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    top: -200px; right: -200px;
+  }
+
+  .slide > * { position: relative; z-index: 1; }
+
+  /* KEYBOARD HINT */
+  .key-hint {
+    position: fixed;
+    bottom: 40px;
+    right: 48px;
+    font-size: 11px;
+    color: var(--border);
+    letter-spacing: 1px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.active .display,
+  .slide.active .slide-label,
+  .slide.active .body-text,
+  .slide.active .through-line,
+  .slide.active .two-col,
+  .slide.active .inito-grid,
+  .slide.active .design-grid,
+  .slide.active .commitment-row,
+  .slide.active .cta-row {
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .slide.active .display { animation-delay: 0.05s; }
+  .slide.active .body-text { animation-delay: 0.15s; }
+  .slide.active .two-col,
+  .slide.active .inito-grid,
+  .slide.active .design-grid { animation-delay: 0.1s; }
+</style>
+</head>
+<body>
+
+<div class="bg-grain"></div>
+<div class="bg-glow"></div>
+
+<div class="corner-tag">build<span>@</span>temple.com</div>
+<div class="slide-count"><em id="current">01</em> / 05</div>
+
+<div class="deck">
+
+  <!-- SLIDE 1: HERO -->
+  <div class="slide active" id="s1">
+    <div class="eyebrow">Applying for — Product Manager</div>
+    <div class="display">Jayant<br><span class="serif">Chauhan</span></div>
+    <div class="orange-line" style="margin-top:28px;"></div>
+    <p class="tagline">
+      <em>Fitness.</em> Deeptech healthtech. Design that ships without a designer.<br>
+      The PM who lives inside the problem.
+    </p>
+  </div>
+
+  <!-- SLIDE 2: FITNESS -->
+  <div class="slide" id="s2">
+    <div class="slide-label">01 — The Athlete</div>
+    <div class="two-col">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-year">Pre-2019</div>
+            <div class="tl-title">Sports kid → JEE destroyed it</div>
+            <div class="tl-desc">88kg. Bad posture. Zero movement. Years of ignoring the body.</div>
+          </div>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-year">Dec 2019</div>
+            <div class="tl-title">The reset</div>
+            <div class="tl-desc">Started gym. 88kg → 78kg in 6 months. Fixed diet — for me, then my parents.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-year">Dec 2022</div>
+            <div class="tl-title">Returned to sport</div>
+            <div class="tl-desc">Co-built a 600+ member football community in Bangalore. Fitness became character.</div>
+          </div>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-year">Sep 2025</div>
+            <div class="tl-title">45-day hard challenge</div>
+            <div class="tl-desc">Hit 15.8% body fat. Today 18%. Back to 15% by May 27th — I've been there.</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card hot">
+          <div class="stat-num">15.8<span>%</span></div>
+          <div class="stat-label">Body fat peak (Sep '25)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">10<span>kg</span></div>
+          <div class="stat-label">Lost in 6 months</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">600<span>+</span></div>
+          <div class="stat-label">Football community members</div>
+        </div>
+        <div class="stat-card hot">
+          <div class="stat-num">May<span> 27</span></div>
+          <div class="stat-label">Back at 15% — joining date</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: INITO -->
+  <div class="slide" id="s3">
+    <div class="slide-label">02 — Deeptech Healthtech</div>
+    <div class="inito-grid">
+      <div class="initiative-list" id="initiativeList">
+        <div class="initiative active" onclick="showDetail(0)">
+          <div class="initiative-name">Personalized Quiz Funnel</div>
+          <div class="initiative-metric">$60K → $300K/mo</div>
+        </div>
+        <div class="initiative" onclick="showDetail(1)">
+          <div class="initiative-name">A/B Testing Infrastructure</div>
+          <div class="initiative-metric">+200% experiment velocity</div>
+        </div>
+        <div class="initiative" onclick="showDetail(2)">
+          <div class="initiative-name">Brand Repositioning</div>
+          <div class="initiative-metric">+10% website CVR</div>
+        </div>
+        <div class="initiative" onclick="showDetail(3)">
+          <div class="initiative-name">LTV Bundle Upsell</div>
+          <div class="initiative-metric">+12% LTV · $1M+ ARR</div>
+        </div>
+        <div class="initiative" onclick="showDetail(4)">
+          <div class="initiative-name">Ovulation Calculator</div>
+          <div class="initiative-metric">Designed & built solo</div>
+        </div>
+        <div class="initiative" onclick="showDetail(5)">
+          <div class="initiative-name">RAG Content Engine</div>
+          <div class="initiative-metric">+500% content output</div>
+        </div>
+      </div>
+      <div class="initiative-detail" id="initiativeDetail">
+        <div class="detail-title" id="dTitle">Personalized Quiz Funnel</div>
+        <div class="detail-body" id="dBody">Replaced static landing pages with a dynamic quiz adapting to each woman's fertility journey — TTC duration, age, conditions (PCOS/thyroid), life transitions. Each user receives a personalized hormone chart preview, building trust through product tangibility.</div>
+        <div class="detail-metrics" id="dMetrics">
+          <div class="dm"><div class="dm-num">5×</div><div class="dm-label">Revenue growth</div></div>
+          <div class="dm"><div class="dm-num">+20%</div><div class="dm-label">CVR vs legacy</div></div>
+          <div class="dm"><div class="dm-num">$300K</div><div class="dm-label">Monthly revenue</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: DESIGN + TECH -->
+  <div class="slide" id="s4">
+    <div class="slide-label">03 — Design + Build</div>
+    <div class="design-grid">
+      <div>
+        <div class="display" style="font-size:clamp(48px,6vw,80px);">Ships in<br><span>Figma.</span><br>Builds in<br><span>Code.</span></div>
+        <div class="tool-tags" style="margin-top:32px;">
+          <div class="tag hot">Figma</div>
+          <div class="tag hot">LangChain</div>
+          <div class="tag hot">RAG</div>
+          <div class="tag">SQL</div>
+          <div class="tag">Python</div>
+          <div class="tag">n8n</div>
+          <div class="tag">Mixpanel</div>
+          <div class="tag">GA4</div>
+          <div class="tag">Amplitude</div>
+          <div class="tag">Jupyter</div>
+        </div>
+      </div>
+      <div class="build-list">
+        <div class="build-item">
+          <div class="build-icon">⚡</div>
+          <div class="build-text">
+            <strong>Ovulation Calculator</strong>
+            <span>Medical-grade tool. Emotionally warm design. Conversion-optimized. Built solo — no designer involved. inito.com/blog/ovulation-calculator</span>
+          </div>
+        </div>
+        <div class="build-item">
+          <div class="build-icon">🧠</div>
+          <div class="build-text">
+            <strong>RAG-Based SEO Content Engine</strong>
+            <span>LLM-powered generator leveraging thousands of research artifacts. 500% increase in content output.</span>
+          </div>
+        </div>
+        <div class="build-item">
+          <div class="build-icon">🤖</div>
+          <div class="build-text">
+            <strong>Agentic Email Marketing Platform</strong>
+            <span>Multi-agent architecture built as side project. Hands-on with LangGraph, n8n, LLM APIs.</span>
+          </div>
+        </div>
+        <div class="build-item">
+          <div class="build-icon">🔍</div>
+          <div class="build-text">
+            <strong>Resume-Job Matching Extension</strong>
+            <span>Browser extension side project. Vibe-coded production-grade UI. Stays hands-on because curious.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: WHY TEMPLE -->
+  <div class="slide" id="s5">
+    <div class="slide-label">04 — Why Temple</div>
+    <div class="through-line">
+      "Both fertility and athletic performance are categories where hardware, data, and human experience have to work together perfectly — because when they don't, real people in high-stakes moments pay the price."
+    </div>
+    <div class="commitment-row">
+      <div class="commit-box">
+        <div class="num">5+</div>
+        <div class="lbl">Years building consumer products</div>
+      </div>
+      <div class="commit-box">
+        <div class="num">$10M</div>
+        <div class="lbl">ARR vertical built from zero</div>
+      </div>
+      <div class="commit-box hot">
+        <div class="num">15%</div>
+        <div class="lbl">Body fat by May 27th — committed</div>
+      </div>
+      <div class="commit-box">
+        <div class="num">IIT</div>
+        <div class="lbl">BHU · Mech Eng · Top 10%</div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <button class="cta-btn" onclick="window.open('mailto:build@temple.com','_blank')">build@temple.com</button>
+      <div class="cta-sub">+91 78385 82245 · Bengaluru</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <div class="dot active" onclick="goTo(0)"></div>
+  <div class="dot" onclick="goTo(1)"></div>
+  <div class="dot" onclick="goTo(2)"></div>
+  <div class="dot" onclick="goTo(3)"></div>
+  <div class="dot" onclick="goTo(4)"></div>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<div class="key-hint">← → to navigate</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  const counter = document.getElementById('current');
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    counter.textContent = String(current + 1).padStart(2, '0');
+  }
+
+  function nextSlide() { goTo((current + 1) % slides.length); }
+  function prevSlide() { goTo((current - 1 + slides.length) % slides.length); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+  });
+
+  // Inito initiative details
+  const details = [
+    {
+      title: 'Personalized Quiz Funnel',
+      body: 'Replaced static landing pages with a dynamic quiz adapting to each woman\'s fertility journey — TTC duration, age, conditions (PCOS/thyroid), life transitions. Each user receives a personalized hormone chart preview, building trust through product tangibility.',
+      metrics: [{ n: '5×', l: 'Revenue growth' }, { n: '+20%', l: 'CVR vs legacy' }, { n: '$300K', l: 'Monthly revenue' }]
+    },
+    {
+      title: 'A/B Testing Infrastructure',
+      body: 'Built custom experimentation layer segmenting by UTM, ad group, keyword, and demographic — replacing low-code builders that couldn\'t handle fine-grained targeting. Added dynamic middle layer for real-time keyword-level content personalization.',
+      metrics: [{ n: '+200%', l: 'Experiment velocity' }, { n: '-8%', l: 'CAC reduction' }, { n: '0→1', l: 'Built from scratch' }]
+    },
+    {
+      title: 'Brand & Trust Repositioning',
+      body: 'Led user research on perception gaps in a $20M+ ARR brand that felt too clinical. Onboarded and directed a brand agency. Oversaw refresh across website, landing pages, emails, and app UX — bridging scientific credibility with emotional warmth.',
+      metrics: [{ n: '+10%', l: 'Website CVR' }, { n: '25+', l: 'Domain experts interviewed' }, { n: '$20M+', l: 'ARR base' }]
+    },
+    {
+      title: 'LTV Bundle Upsell',
+      body: 'Data showed 30% churn after cycle 1, another 30% after cycle 2. Users who tested 15+ strips in cycle 1 had significantly lower churn. Designed personalized strip bundle upsell at checkout based on cycle length, TTC stage, and testing regularity.',
+      metrics: [{ n: '+12%', l: 'LTV' }, { n: '+40%', l: 'AOV' }, { n: '$1M+', l: 'Projected ARR uplift' }]
+    },
+    {
+      title: 'Ovulation Calculator',
+      body: 'Designed and built solo — no designer involved. Had to be medically accurate, emotionally warm for a vulnerable audience, and conversion-optimized simultaneously. Includes medical review trust signal, warm visual design, clinical disclaimer. Live at inito.com/blog/ovulation-calculator.',
+      metrics: [{ n: '0', l: 'Designers involved' }, { n: '3-in-1', l: 'Medical + Warm + CRO' }, { n: 'Live', l: 'In production' }]
+    },
+    {
+      title: 'RAG Content Engine',
+      body: 'Built LLM-powered SEO content generator leveraging thousands of research artifacts. Used LangChain and RAG architecture to increase context quality and content output dramatically. One of many hands-on AI builds done outside the day job description.',
+      metrics: [{ n: '+500%', l: 'Content output' }, { n: 'RAG', l: 'Architecture' }, { n: 'LangChain', l: 'Stack' }]
+    }
+  ];
+
+  function showDetail(i) {
+    const items = document.querySelectorAll('.initiative');
+    items.forEach((el, idx) => el.classList.toggle('active', idx === i));
+    const d = details[i];
+    document.getElementById('dTitle').textContent = d.title;
+    document.getElementById('dBody').textContent = d.body;
+    const mEl = document.getElementById('dMetrics');
+    mEl.innerHTML = d.metrics.map(m => `<div class="dm"><div class="dm-num">${m.n}</div><div class="dm-label">${m.l}</div></div>`).join('');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jayant Chauhan — Temple</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0D0D0D;
+  --paper: #F7F4EF;
+  --accent: #E8380D;
+  --muted: #8C8680;
+  --rule: #D8D3CC;
+  --card-bg: #EFEBE4;
+  --white: #FFFFFF;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* LAYOUT */
+.deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateX(32px);
+  display: grid;
+}
+
+.slide.active {
+  opacity: 1; pointer-events: all;
+  transform: translateX(0);
+}
+
+/* GLOBAL HEADER BAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 48px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 48px;
+  justify-content: space-between;
+  background: var(--paper);
+  z-index: 100;
+}
+
+.topbar-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+}
+
+.topbar-center {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--ink);
+}
+
+.topbar-right {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* BOTTOM NAV */
+.bottombar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 48px;
+  border-top: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 48px;
+  justify-content: space-between;
+  background: var(--paper);
+  z-index: 100;
+}
+
+.progress-track {
+  flex: 1; max-width: 240px;
+  height: 2px; background: var(--rule);
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%; background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.nav-controls { display: flex; gap: 2px; }
+
+.nav-btn {
+  width: 36px; height: 28px;
+  border: 1px solid var(--rule);
+  background: none; cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; color: var(--muted);
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.slide-indicators {
+  display: flex; gap: 6px; align-items: center;
+}
+
+.ind {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rule); cursor: pointer;
+  transition: all 0.3s;
+}
+.ind.active { background: var(--ink); width: 20px; border-radius: 3px; }
+
+/* CONTENT AREA */
+.content {
+  padding: 80px 48px 72px;
+  height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* =================== SLIDE 1: HERO =================== */
+#s1 .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 0;
+  padding: 80px 0 72px;
+}
+
+.hero-left {
+  padding: 48px 48px 48px 48px;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-right {
+  padding: 48px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(56px, 8vw, 96px);
+  line-height: 0.9;
+  letter-spacing: -2px;
+  color: var(--ink);
+}
+
+.hero-name em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.role-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+}
+
+.role-tag::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--accent);
+}
+
+.hero-desc {
+  font-size: 15px; line-height: 1.7;
+  color: #5A5550; max-width: 360px;
+  font-weight: 400;
+}
+
+.hero-desc strong { color: var(--ink); font-weight: 600; }
+
+.three-pillars {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--rule);
+}
+
+.pillar {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; gap: 16px;
+  transition: background 0.2s;
+  cursor: default;
+}
+.pillar:last-child { border-bottom: none; }
+.pillar:hover { background: var(--card-bg); }
+
+.pillar-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent);
+  width: 24px; flex-shrink: 0;
+}
+
+.pillar-text strong {
+  display: block; font-size: 14px;
+  font-weight: 700; color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.pillar-text span {
+  font-size: 12px; color: var(--muted);
+}
+
+.hero-contact {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  line-height: 1.8;
+}
+
+.hero-contact a { color: var(--accent); text-decoration: none; }
+
+/* LARGE BG NUMBER */
+.bg-num {
+  position: absolute;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 320px;
+  line-height: 1;
+  color: rgba(0,0,0,0.03);
+  right: -20px; bottom: 48px;
+  pointer-events: none;
+  letter-spacing: -10px;
+  user-select: none;
+}
+
+/* =================== SLIDE 2: FITNESS =================== */
+#s2 .content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0;
+  padding: 80px 0 72px;
+}
+
+.fitness-left {
+  padding: 48px;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column;
+}
+
+.fitness-right {
+  padding: 48px 32px;
+  display: flex; flex-direction: column;
+  gap: 2px;
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-style: italic;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.1; color: var(--ink);
+  margin-bottom: 32px;
+}
+
+.timeline { display: flex; flex-direction: column; gap: 0; flex: 1; }
+
+.tl-row {
+  display: grid;
+  grid-template-columns: 80px 1px 1fr;
+  gap: 0 20px;
+  align-items: stretch;
+}
+
+.tl-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  text-align: right; padding: 16px 0;
+  padding-top: 18px;
+}
+
+.tl-line-col {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0;
+}
+
+.tl-dot-outer {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--rule);
+  background: var(--paper);
+  margin-top: 20px; flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.tl-row.hot .tl-dot-outer {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.tl-connector {
+  width: 1px; flex: 1;
+  background: var(--rule);
+}
+
+.tl-row:last-child .tl-connector { display: none; }
+
+.tl-body { padding: 16px 0 16px 0; }
+
+.tl-event {
+  font-size: 14px; font-weight: 700;
+  color: var(--ink); margin-bottom: 4px;
+}
+
+.tl-row.hot .tl-event { color: var(--accent); }
+
+.tl-detail {
+  font-size: 12px; color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Fitness stat cards */
+.fit-stat {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 20px;
+  position: relative;
+}
+
+.fit-stat.accent-bg {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.fit-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 40px; line-height: 1;
+  color: var(--ink);
+}
+
+.fit-stat.accent-bg .fit-stat-num { color: var(--white); }
+
+.fit-stat-unit {
+  font-size: 18px;
+}
+
+.fit-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 1px;
+  color: var(--muted); margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.fit-stat.accent-bg .fit-stat-label { color: rgba(255,255,255,0.7); }
+
+.commitment-note {
+  margin-top: auto;
+  padding: 16px;
+  background: var(--card-bg);
+  border-left: 2px solid var(--accent);
+  font-size: 12px; line-height: 1.6;
+  color: var(--muted);
+}
+
+.commitment-note strong { color: var(--ink); }
+
+/* =================== SLIDE 3: PM WORK =================== */
+#s3 .content {
+  padding: 80px 48px 72px;
+  display: flex; flex-direction: column;
+}
+
+.pm-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  flex: 1;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+.pm-tabs {
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+}
+
+.pm-tab {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.pm-tab:hover { background: var(--card-bg); }
+
+.pm-tab.active {
+  background: var(--ink);
+}
+
+.pm-tab-company {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.pm-tab.active .pm-tab-company { color: rgba(255,255,255,0.4); }
+
+.pm-tab-name {
+  font-size: 12px; font-weight: 700;
+  color: var(--ink); line-height: 1.3;
+}
+
+.pm-tab.active .pm-tab-name { color: var(--white); }
+
+.pm-tab-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--accent);
+  margin-top: 4px;
+}
+
+.pm-tab.active .pm-tab-metric { color: #FF8A70; }
+
+.pm-detail {
+  padding: 36px 40px;
+  display: none; flex-direction: column;
+}
+
+.pm-detail.active { display: flex; }
+
+.pm-detail-company {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.pm-detail-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 700;
+  font-style: italic; line-height: 1.2;
+  color: var(--ink); margin-bottom: 20px;
+}
+
+.pm-detail-body {
+  font-size: 14px; line-height: 1.75;
+  color: #5A5550; margin-bottom: 28px;
+  flex: 1;
+}
+
+.pm-detail-body strong { color: var(--ink); font-weight: 600; }
+
+.pm-metrics-row {
+  display: flex; gap: 2px;
+}
+
+.pm-metric-box {
+  flex: 1;
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  padding: 16px;
+}
+
+.pm-metric-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 28px;
+  color: var(--accent); line-height: 1;
+}
+
+.pm-metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  margin-top: 4px; line-height: 1.4;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* =================== SLIDE 4: DESIGN + TECH =================== */
+#s4 .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 80px 0 72px;
+}
+
+.dt-left {
+  padding: 48px;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column;
+}
+
+.dt-right {
+  padding: 48px;
+  display: flex; flex-direction: column;
+}
+
+.complete-pm-statement {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 900; line-height: 1.1;
+  color: var(--ink); margin-bottom: 32px;
+}
+
+.complete-pm-statement em {
+  font-style: italic; color: var(--accent);
+}
+
+.capability-list {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--rule);
+}
+
+.cap-row {
+  display: flex; align-items: center; gap: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.cap-row:last-child { border-bottom: none; }
+
+.cap-icon {
+  width: 48px; height: 48px;
+  border-right: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  background: var(--card-bg);
+}
+
+.cap-content { padding: 12px 16px; }
+
+.cap-title {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+}
+
+.cap-desc {
+  font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4;
+}
+
+.built-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.built-items {
+  display: flex; flex-direction: column; gap: 2px;
+  flex: 1;
+}
+
+.built-item {
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  padding: 16px 20px;
+  display: flex; justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.built-item:hover {
+  background: var(--ink);
+}
+
+.built-item:hover .built-name { color: var(--white); }
+.built-item:hover .built-tag { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); }
+
+.built-name {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+}
+
+.built-impact {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  margin-top: 3px;
+}
+
+.built-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--rule);
+  padding: 3px 8px; white-space: nowrap;
+}
+
+.tool-row {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: auto; padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.tool-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+}
+
+.tool-chip.hot {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(232,56,13,0.04);
+}
+
+/* =================== SLIDE 5: WHY TEMPLE =================== */
+#s5 .content {
+  padding: 80px 48px 72px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+
+.through-line-block {
+  border-left: 3px solid var(--accent);
+  padding-left: 32px;
+  max-width: 780px;
+  margin: 24px 0 40px;
+}
+
+.through-line-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 2.8vw, 30px);
+  font-style: italic; line-height: 1.5;
+  color: var(--ink); font-weight: 700;
+}
+
+.commit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-bottom: 32px;
+}
+
+.commit-cell {
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  padding: 24px 20px;
+}
+
+.commit-cell.dark {
+  background: var(--ink);
+}
+
+.commit-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 36px;
+  line-height: 1; color: var(--ink);
+}
+
+.commit-cell.dark .commit-num { color: var(--white); }
+.commit-cell.accent .commit-num { color: var(--accent); }
+
+.commit-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  margin-top: 8px; line-height: 1.4;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.commit-cell.dark .commit-label { color: rgba(255,255,255,0.4); }
+
+.final-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.final-cta {
+  display: flex; gap: 2px;
+}
+
+.cta-primary {
+  background: var(--accent); color: var(--white);
+  border: 1px solid var(--accent);
+  padding: 12px 28px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.cta-primary:hover { opacity: 0.85; }
+
+.cta-secondary {
+  background: none; color: var(--ink);
+  border: 1px solid var(--rule);
+  padding: 12px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.2s;
+}
+.cta-secondary:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+.final-meta {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted); line-height: 1.8;
+}
+
+/* ANIMATIONS */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide.active .section-label { animation: slideIn 0.4s ease 0.05s both; }
+.slide.active .section-title { animation: slideIn 0.4s ease 0.1s both; }
+.slide.active .hero-name { animation: slideIn 0.4s ease 0.05s both; }
+.slide.active .role-tag { animation: slideIn 0.4s ease 0.1s both; }
+.slide.active .hero-desc { animation: slideIn 0.4s ease 0.15s both; }
+.slide.active .three-pillars { animation: slideIn 0.4s ease 0.12s both; }
+.slide.active .timeline { animation: slideIn 0.4s ease 0.1s both; }
+.slide.active .pm-grid { animation: slideIn 0.4s ease 0.1s both; }
+.slide.active .complete-pm-statement { animation: slideIn 0.4s ease 0.05s both; }
+.slide.active .capability-list { animation: slideIn 0.4s ease 0.1s both; }
+.slide.active .through-line-block { animation: slideIn 0.4s ease 0.1s both; }
+.slide.active .commit-grid { animation: slideIn 0.4s ease 0.15s both; }
+.slide.active .final-row { animation: slideIn 0.4s ease 0.2s both; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">Application · Product Manager</div>
+  <div class="topbar-center">Jayant Chauhan</div>
+  <div class="topbar-right">build@temple.com</div>
+</div>
+
+<div class="deck">
+
+  <!-- ===== SLIDE 1: HERO ===== -->
+  <div class="slide active" id="s1">
+    <div class="content">
+      <div class="hero-left">
+        <div>
+          <div class="hero-name">Jayant<br><em>Chauhan</em></div>
+          <div class="role-tag">Senior Product Manager · 6 years</div>
+        </div>
+        <div class="hero-desc">
+          Growth PM who <strong>researches like a scientist</strong>, designs in Figma, and codes with AI.<br><br>
+          Built across healthtech, edtech, and travel. Obsessed with fitness. Currently at <strong>Inito</strong> — a fertility hardware company.
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="three-pillars">
+          <div class="pillar">
+            <div class="pillar-num">01</div>
+            <div class="pillar-text">
+              <strong>The Athlete</strong>
+              <span>600+ member football community · 15.8% body fat · commits to 15% by May 27</span>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">02</div>
+            <div class="pillar-text">
+              <strong>Deeptech Healthtech PM</strong>
+              <span>Fertility hardware · regulated category · hardware + data + design · $3M ARR built from 0</span>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">03</div>
+            <div class="pillar-text">
+              <strong>Complete PM</strong>
+              <span>Designs in Figma · codes with AI · researches like a scientist · ships without handholding</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-contact">
+          jayant.chauhan.mec16@iitbhu.ac.in<br>
+          +91 78385 82245 · Bengaluru<br>
+          IIT BHU · Mechanical Engineering · Top 10%
+        </div>
+      </div>
+      <div class="bg-num">JC</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: FITNESS ===== -->
+  <div class="slide" id="s2">
+    <div class="content">
+      <div class="fitness-left">
+        <div class="section-label">The Athlete</div>
+        <div class="section-title">Fitness isn't aesthetics.<br>It's a system.</div>
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-year">Pre 2019</div>
+            <div class="tl-line-col"><div class="tl-dot-outer"></div><div class="tl-connector"></div></div>
+            <div class="tl-body">
+              <div class="tl-event">Sports kid → JEE destroyed it</div>
+              <div class="tl-detail">88kg, bad posture, zero movement. Years of ignoring the body to chase grades and placement.</div>
+            </div>
+          </div>
+          <div class="tl-row hot">
+            <div class="tl-year">Dec 2019</div>
+            <div class="tl-line-col"><div class="tl-dot-outer"></div><div class="tl-connector"></div></div>
+            <div class="tl-body">
+              <div class="tl-event">The reset — 88kg to 78kg in 6 months</div>
+              <div class="tl-detail">Started gym. Lost 10kg. Fixed diet for myself, then my parents. Understood the body as a system: sleep, food, recovery, stress.</div>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-year">Dec 2022</div>
+            <div class="tl-line-col"><div class="tl-dot-outer"></div><div class="tl-connector"></div></div>
+            <div class="tl-body">
+              <div class="tl-event">Returned to sport — built a community</div>
+              <div class="tl-detail">Co-founded 600+ member football community in Bangalore. Became a better manager on the pitch before becoming one at work.</div>
+            </div>
+          </div>
+          <div class="tl-row hot">
+            <div class="tl-year">Sep 2025</div>
+            <div class="tl-line-col"><div class="tl-dot-outer"></div><div class="tl-connector"></div></div>
+            <div class="tl-body">
+              <div class="tl-event">45-day hard challenge → 15.8% body fat</div>
+              <div class="tl-detail">Today at 18% — life happened. Back to 15% by May 27th. Proven, not aspirational.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fitness-right">
+        <div class="fit-stat accent-bg">
+          <div class="fit-stat-num">15.8<span class="fit-stat-unit">%</span></div>
+          <div class="fit-stat-label">Body fat peak · Sep 2025</div>
+        </div>
+        <div class="fit-stat">
+          <div class="fit-stat-num">88<span class="fit-stat-unit">→78</span></div>
+          <div class="fit-stat-label">kg in 6 months</div>
+        </div>
+        <div class="fit-stat">
+          <div class="fit-stat-num">600<span class="fit-stat-unit">+</span></div>
+          <div class="fit-stat-label">Football community members</div>
+        </div>
+        <div class="fit-stat">
+          <div class="fit-stat-num">45</div>
+          <div class="fit-stat-label">Day hard challenge completed</div>
+        </div>
+        <div class="commitment-note">
+          <strong>Commitment:</strong> Currently 18% body fat. Will be 15% by May 27th — the day I'd join Temple. I've been there before, I know exactly how to get back.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: PM WORK ===== -->
+  <div class="slide" id="s3">
+    <div class="content">
+      <div class="section-label">Product Work</div>
+      <div class="section-title" style="margin-bottom:0; font-size: clamp(24px,3vw,36px);">6 years. 3 companies. All 0→1.</div>
+      <div class="pm-grid">
+        <div class="pm-tabs" id="pmTabs">
+          <div class="pm-tab active" onclick="showPM(0)">
+            <div class="pm-tab-company">Inito · 2024–Now</div>
+            <div class="pm-tab-name">Quiz Funnel</div>
+            <div class="pm-tab-metric">$0 → $3M ARR</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(1)">
+            <div class="pm-tab-company">Inito · 2024–Now</div>
+            <div class="pm-tab-name">Expert Consultation</div>
+            <div class="pm-tab-metric">+24% conversion</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(2)">
+            <div class="pm-tab-company">Inito · 2024–Now</div>
+            <div class="pm-tab-name">A/B Infra + LPs</div>
+            <div class="pm-tab-metric">+200% velocity</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(3)">
+            <div class="pm-tab-company">Inito · 2024–Now</div>
+            <div class="pm-tab-name">LTV Bundle Upsell</div>
+            <div class="pm-tab-metric">$1M+ ARR</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(4)">
+            <div class="pm-tab-company">Unacademy · 2020–23</div>
+            <div class="pm-tab-name">Unacademy Store</div>
+            <div class="pm-tab-metric">$10M ARR from 0</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(5)">
+            <div class="pm-tab-company">Unacademy · 2020–23</div>
+            <div class="pm-tab-name">Referral Revamp</div>
+            <div class="pm-tab-metric">+54% revenue</div>
+          </div>
+          <div class="pm-tab" onclick="showPM(6)">
+            <div class="pm-tab-company">GetSetYo · 2023–24</div>
+            <div class="pm-tab-name">Travel Advisor GTM</div>
+            <div class="pm-tab-metric">80% M1 retention</div>
+          </div>
+        </div>
+        <div id="pmDetailPane">
+
+          <div class="pm-detail active" id="pm0">
+            <div class="pm-detail-company">Inito · First Growth PM</div>
+            <div class="pm-detail-title">Personalized Fertility Quiz Funnel</div>
+            <div class="pm-detail-body">Replaced static landing pages with a dynamic quiz adapting to each woman's fertility journey. Conducted extensive user research to identify archetypes by TTC duration, age, conditions (PCOS/thyroid), life transitions. Each user receives a <strong>personalized hormone chart preview</strong> — building trust through product tangibility. Research-first, then Figma, then ship.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">$3M</div><div class="pm-metric-label">ARR built from 0</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">+20%</div><div class="pm-metric-label">CVR vs legacy</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">0→1</div><div class="pm-metric-label">No PM before me</div></div>
+            </div>
+          </div>
+
+          <div class="pm-detail" id="pm1">
+            <div class="pm-detail-company">Inito · Regulated Category</div>
+            <div class="pm-detail-title">Expert-Led Consultation Program</div>
+            <div class="pm-detail-body">Built 0→1 consultation program for a highly regulated, sensitive vertical. Conducted research with <strong>25+ domain experts</strong> — OBGYNs, fertility specialists, counselors — to design compliant, empathetic workflows. Addressed the 70% of non-converters who needed deeper product understanding before purchase. Every design decision balanced legal compliance with emotional warmth.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">+24%</div><div class="pm-metric-label">Conversion lift</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">48%</div><div class="pm-metric-label">Opt-in rate</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">25+</div><div class="pm-metric-label">Experts interviewed</div></div>
+            </div>
+          </div>
+
+          <div class="pm-detail" id="pm2">
+            <div class="pm-detail-company">Inito · Infrastructure</div>
+            <div class="pm-detail-title">A/B Testing + Dynamic Landing Page Infra</div>
+            <div class="pm-detail-body">Low-code builders (Webflow/Unbounce) couldn't handle fine-grained targeting — only Math.random() splits, no UTM/keyword-level segmentation. Built a custom experimentation layer from scratch with automated post-experiment analysis and a dynamic content layer enabling <strong>real-time keyword-level personalization</strong> across Google Ads groups.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">+200%</div><div class="pm-metric-label">Experiment velocity</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">-8%</div><div class="pm-metric-label">CAC reduction</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">0→1</div><div class="pm-metric-label">Built from scratch</div></div>
+            </div>
+          </div>
+
+          <div class="pm-detail" id="pm3">
+            <div class="pm-detail-company">Inito · Monetization</div>
+            <div class="pm-detail-title">Personalized Strip Bundle Upsell</div>
+            <div class="pm-detail-body">Data showed 30% churn after cycle 1, another 30% after cycle 2. Root cause: users ran out of strips mid-cycle → anxiety → test gaps → churn. Users who tested <strong>15+ strips in cycle 1</strong> had significantly lower churn. Designed personalized bundle upsell at checkout based on cycle length, TTC stage, and testing regularity.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">-6%</div><div class="pm-metric-label">Churn reduction</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">+40%</div><div class="pm-metric-label">AOV increase</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">$1M+</div><div class="pm-metric-label">ARR contribution</div></div>
+            </div>
+          </div>
+
+          <div class="pm-detail" id="pm4">
+            <div class="pm-detail-company">Unacademy · New Vertical</div>
+            <div class="pm-detail-title">Unacademy Store — $10M ARR from Zero</div>
+            <div class="pm-detail-body">Launched a brand new product vertical to sell unbundled offerings — courses, notes, mentorships. Fought to build something that worked for a student paying ₹5K, not just ₹50K. Validated and scaled low AOV courses, built robust GTM with business teams. Led 3 APMs. Promoted from APM → SPM in 3.5 years.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">$10M</div><div class="pm-metric-label">ARR in 6 months</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">3</div><div class="pm-metric-label">APMs managed</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">0→1</div><div class="pm-metric-label">New vertical</div></div>
+            </div>
+          </div>
+
+          <div class="pm-detail" id="pm5">
+            <div class="pm-detail-company">Unacademy · Growth</div>
+            <div class="pm-detail-title">Referral Program Revamp</div>
+            <div class="pm-detail-body">Legacy referral program excluded free users and had no consumption-based logic. Redesigned with gamified tiers, free-user expansion, consumption-based nudges (refer after activation), monthly leaderboards, milestone rewards, and instant gratification via subscription extensions and Amazon gift cards. Also built Free Trial experience across 50+ categories — <strong>+150% free-to-paid CVR</strong>.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">+54%</div><div class="pm-metric-label">Referral revenue</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">-$1M</div><div class="pm-metric-label">Referral cost saved</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">+150%</div><div class="pm-metric-label">Free-to-paid CVR</div></div>
+            </div>
+          </div>
+
+          <div class="pm-detail" id="pm6">
+            <div class="pm-detail-company">GetSetYo · GTM</div>
+            <div class="pm-detail-title">Social Travel Advisor Platform</div>
+            <div class="pm-detail-body">Built complete product + GTM for a social travel advisor platform (comparable to Fora Travel). Designed and launched Flight & Hotel Deal Engine — automated inventory scanning, curated personalized offers via live fare APIs. Led a team of 5. Despite a 6-month stint, delivered outsized impact through focused execution and strong GTM discipline.</div>
+            <div class="pm-metrics-row">
+              <div class="pm-metric-box"><div class="pm-metric-num">150+</div><div class="pm-metric-label">Advisors in 45 days</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">80%</div><div class="pm-metric-label">M1 retention</div></div>
+              <div class="pm-metric-box"><div class="pm-metric-num">-90%</div><div class="pm-metric-label">Deal search time</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 4: DESIGN + TECH ===== -->
+  <div class="slide" id="s4">
+    <div class="content">
+      <div class="dt-left">
+        <div class="complete-pm-statement">The<br><em>Complete</em><br>PM.</div>
+        <div class="capability-list">
+          <div class="cap-row">
+            <div class="cap-icon">🔬</div>
+            <div class="cap-content">
+              <div class="cap-title">Researches like a scientist</div>
+              <div class="cap-desc">25+ domain expert interviews at Inito. User archetypes. Cohort analysis. Data before Figma, always.</div>
+            </div>
+          </div>
+          <div class="cap-row">
+            <div class="cap-icon">✦</div>
+            <div class="cap-content">
+              <div class="cap-title">Designs in Figma</div>
+              <div class="cap-desc">Designs for fun. Ships UI solo. Built Inito's ovulation calculator — medically accurate, emotionally warm, CRO-optimized. No designer involved.</div>
+            </div>
+          </div>
+          <div class="cap-row">
+            <div class="cap-icon">⚡</div>
+            <div class="cap-content">
+              <div class="cap-title">Codes with AI</div>
+              <div class="cap-desc">RAG-based LLM products in production. Agentic workflows in n8n + LangChain. Vibe-codes production-grade UI. SQL daily.</div>
+            </div>
+          </div>
+          <div class="cap-row">
+            <div class="cap-icon">📐</div>
+            <div class="cap-content">
+              <div class="cap-title">Ships without handholding</div>
+              <div class="cap-desc">Spec → Figma → Eng → Launch. Owns the full loop. Cross-functional execution across engineering, design, and GTM.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dt-right">
+        <div class="built-section-title">Things actually built</div>
+        <div class="built-items">
+          <div class="built-item">
+            <div>
+              <div class="built-name">Ovulation Calculator · Inito</div>
+              <div class="built-impact">Designed + built solo · Medical + warm + CRO · Live in production</div>
+            </div>
+            <div class="built-tag">Figma + Code</div>
+          </div>
+          <div class="built-item">
+            <div>
+              <div class="built-name">RAG Content Engine · Inito</div>
+              <div class="built-impact">LLM + RAG · 500% content output increase</div>
+            </div>
+            <div class="built-tag">LangChain + RAG</div>
+          </div>
+          <div class="built-item">
+            <div>
+              <div class="built-name">Agentic Email Platform · Side project</div>
+              <div class="built-impact">Multi-agent architecture · LangGraph + n8n</div>
+            </div>
+            <div class="built-tag">Agentic AI</div>
+          </div>
+          <div class="built-item">
+            <div>
+              <div class="built-name">Resume-Job Matching Extension</div>
+              <div class="built-impact">Browser extension · Production-grade UI · Vibe-coded</div>
+            </div>
+            <div class="built-tag">AI + Chrome ext</div>
+          </div>
+          <div class="built-item">
+            <div>
+              <div class="built-name">Revision Bytes · Unacademy</div>
+              <div class="built-impact">First GenAI product at Unacademy · GPT-4 · -90% content launch time</div>
+            </div>
+            <div class="built-tag">GPT-4</div>
+          </div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-chip hot">Figma</div>
+          <div class="tool-chip hot">LangChain</div>
+          <div class="tool-chip hot">RAG</div>
+          <div class="tool-chip hot">n8n</div>
+          <div class="tool-chip">SQL</div>
+          <div class="tool-chip">Python</div>
+          <div class="tool-chip">Mixpanel</div>
+          <div class="tool-chip">GA4</div>
+          <div class="tool-chip">Amplitude</div>
+          <div class="tool-chip">Jupyter</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 5: WHY TEMPLE ===== -->
+  <div class="slide" id="s5">
+    <div class="content">
+      <div>
+        <div class="section-label">Why Temple</div>
+        <div class="through-line-block">
+          <div class="through-line-text">"Both fertility and athletic performance are categories where hardware, data, and human experience have to work together perfectly — because when they don't, real people in high-stakes moments pay the price. I've spent a year living inside that problem for fertility. I want to do it for athletic performance."</div>
+        </div>
+      </div>
+      <div class="commit-grid">
+        <div class="commit-cell">
+          <div class="commit-num">6<span style="font-size:20px">yrs</span></div>
+          <div class="commit-label">Building consumer products</div>
+        </div>
+        <div class="commit-cell accent">
+          <div class="commit-num">$10M+</div>
+          <div class="commit-label">ARR verticals built from zero</div>
+        </div>
+        <div class="commit-cell dark">
+          <div class="commit-num">15%</div>
+          <div class="commit-label">Body fat by May 27th · committed</div>
+        </div>
+        <div class="commit-cell">
+          <div class="commit-num">IIT</div>
+          <div class="commit-label">BHU · Mech Eng · Top 10% · 8.58 GPA</div>
+        </div>
+      </div>
+      <div class="final-row">
+        <div class="final-cta">
+          <button class="cta-primary" onclick="window.open('mailto:build@temple.com','_blank')">Apply · build@temple.com</button>
+          <button class="cta-secondary">+91 78385 82245</button>
+        </div>
+        <div class="final-meta">
+          Jayant Chauhan · Bengaluru<br>
+          jayant.chauhan.mec16@iitbhu.ac.in<br>
+          [LinkedIn] · [GitHub]
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottombar">
+  <div class="nav-controls">
+    <button class="nav-btn" onclick="prevSlide()">←</button>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:20%"></div>
+  </div>
+  <div class="slide-indicators">
+    <div class="ind active" onclick="goTo(0)"></div>
+    <div class="ind" onclick="goTo(1)"></div>
+    <div class="ind" onclick="goTo(2)"></div>
+    <div class="ind" onclick="goTo(3)"></div>
+    <div class="ind" onclick="goTo(4)"></div>
+  </div>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const inds = document.querySelectorAll('.ind');
+  const progressFill = document.getElementById('progressFill');
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    inds[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    inds[current].classList.add('active');
+    progressFill.style.width = ((current + 1) / slides.length * 100) + '%';
+  }
+
+  function nextSlide() { goTo((current + 1) % slides.length); }
+  function prevSlide() { goTo((current - 1 + slides.length) % slides.length); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+  });
+
+  // PM tabs
+  const pmData = [0,1,2,3,4,5,6];
+  function showPM(i) {
+    document.querySelectorAll('.pm-tab').forEach((t,idx) => t.classList.toggle('active', idx===i));
+    document.querySelectorAll('.pm-detail').forEach((d,idx) => d.classList.toggle('active', idx===i));
+  }
+</script>
+</body>
+</html>
