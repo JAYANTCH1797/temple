@@ -18,7 +18,7 @@
 
 ## AI / Technical Projects
 
-### GitHub: https://github.com/jayaNTCH1797/
+### GitHub: https://github.com/jayantch1797
 
 ### At Inito (Professional)
 - **LLM-powered SEO content generator** — RAG-based system leveraging thousands of research artifacts
@@ -89,7 +89,7 @@
 ---
 
 ## Items Still Needed
-- [x] ~~GitHub profile link for AI/agentic projects~~ → https://github.com/jayaNTCH1797/
+- [x] ~~GitHub profile link for AI/agentic projects~~ → https://github.com/jayantch1797
 - [x] ~~Body fat scan image~~ → InBody scan: 15.8% BF verified
 - [x] ~~Football community proof~~ → "One love Football" — 713 members, 10 groups, Community admin
 - [x] ~~Design portfolio~~ → Ovulation calculator (production TOFU asset, designed + built end-to-end)

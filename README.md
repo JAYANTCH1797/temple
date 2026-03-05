@@ -33,7 +33,7 @@ temple/
 
 | Asset | Link |
 |-------|------|
-| **GitHub** | https://github.com/jayaNTCH1797/ |
+| **GitHub** | https://github.com/jayantch1797 |
 | **Ovulation Calculator (US)** | https://inito.com/blog/ovulation-calculator |
 | **Ovulation Calculator (India)** | https://rebrand.staging.inito.com/blog/ovulation-calculator |
 | **InBody Scan** | 15.8% BF, 71.4 kg, 34.6 kg muscle — IMG_9252.HEIC |

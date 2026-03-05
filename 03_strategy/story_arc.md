@@ -88,7 +88,7 @@
   - Understands how agentic applications work
   - Can vibe-code production-grade UI
   - Understands memory, chains, tooling
-- **GitHub:** https://github.com/jayaNTCH1797/
+- **GitHub:** https://github.com/jayantch1797
   - **Deep Research Agent** — full-stack agentic app (UI + backend reasoning framework)
   - **Email Marketing Tool** — end-to-end email marketing app (~70% done)
   - **Bill Splitter** — utility app with clean UI
